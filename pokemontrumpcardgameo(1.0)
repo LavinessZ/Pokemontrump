@@ -1,0 +1,121 @@
+def Pokemon_TopTrumps ():
+    #import functions needed to run code
+    import requests
+    import random
+    import time
+    # introduce player 1
+    #sleep added to pace game
+    print("Welcome to Pokemon Top Trumps Battle Cards!")
+    player1 = input("Hello there, fellow POKEMON Trainer! What is your name? ")
+    print('Nice to meet you! Time to battle!'.format(player1))
+    time.sleep(3)
+    print('You will receive a random POKEMON card and compete against my POKEMON. You get to choose the category - order, experience, id, weight or height.')
+    time.sleep(5)
+    print('Good luck!')
+    time.sleep(5)
+    #randomly select both cards but only show the player the info from the card they have drawn
+    print('You will randomly be selected a POKEMON card for this round. {} - you are PLAYER 1:\n\n'.format(player1))
+    #import pokemon data and randomly select one card for each player
+    #player 1 is the user, player 2 is the computer
+    def random_pokemon():
+        player1_card = random.randint(1, 151)
+        player2_card = random.randint(1, 151)
+        player1_url = 'https://pokeapi.co/api/v2/pokemon/{}/'.format(player1_card)
+        player2_url = 'https://pokeapi.co/api/v2/pokemon/{}/'.format(player2_card)
+        player1_response = requests.get(player1_url).json()
+        player2_response = requests.get(player2_url).json()
+        player1Card = {
+        'name': player1_response['name'],
+        'order': player1_response['order'],
+        'experience': player1_response['base_experience'],
+        'id': player1_response['id'],
+        'height': player1_response['height'],
+        'weight': player1_response['weight']
+    }
+        player2Card = {
+        'name': player2_response['name'],
+        'order': player2_response['order'],
+        'experience': player2_response['base_experience'],
+        'id': player2_response['id'],
+        'height': player2_response ['height'],
+        'weight': player2_response ['weight']
+    }
+        return [player1Card, player2Card]
+    #Choosing the category
+    def get_input():
+        category = input("Who is going to choose the category, you or the computer? me/computer: ")
+        time.sleep (5)
+        if category == "me":
+            category = input('Now you need to choose the category you want to compete in - the categories available today are order, experience, id, height or weight. \nChoose carefully! Type your answer below: \n')
+            time.sleep(3)
+            print('\nYou have chosen to compare the Pokemon based on:', category, )
+            time.sleep(3)
+        elif category == 'computer':
+                number = random.randint(1, 5)
+                if number == 1:
+                    category = 'order'
+                    print("The computer has selected {}".format(category))
+                elif number == 2:
+                    category = 'experience'
+                    print("The computer has selected {}".format(category))
+                elif number == 3:
+                    category = 'id'
+                    print("The computer has selected {}".format(category))
+                elif number == 4:
+                    category = 'height'
+                    print("The computer has selected {}".format(category))
+                elif number == 5:
+                    category  = 'weight'
+                    print("the computer has selected {}".format(category))
+        return category
+    #Remind the player which pokemon they were allocated and now also show the opponent's card. Decide winner by comparing the stats of the 2 cards in the category chosen by the player
+    def compare_pokemon_top_trump_cards():
+        cards = random_pokemon()
+        player1 = cards [0]
+        player2 = cards [1]
+        print("Player 1, this is your POKEMON for this round : ", player1, "\n\n")
+        time.sleep(4)
+        user_input = get_input()
+        player1_category = ''
+        player2_category = ''
+        print("Your card was : ", player1, "\n\n" "Your opponent's card was: ", player2, "\n")
+        time.sleep(3)
+        if (user_input == 'order'):
+            player1_category = player1['order']
+            player2_category = player2['order']
+            print(compare_stats(player1_category, player2_category))
+        elif (user_input == 'experience'):
+            player1_category = player1['experience']
+            player2_category = player2['experience']
+            print(compare_stats(player1_category, player2_category))
+        elif (user_input == 'id'):
+            player1_category = player1['id']
+            player2_category = player2['id']
+            print(compare_stats(player1_category, player2_category))
+        elif (user_input == 'height'):
+            player1_category = player1['height']
+            player2_category = player2['height']
+            print(compare_stats(player1_category, player2_category))
+        elif (user_input == 'weight'):
+            player1_category = player1['weight']
+            player2_category = player2['weight']
+            print(compare_stats(player1_category, player2_category))
+        else:
+          print('{} this was not one of the categories. Start again'.format(user_input))
+    #Announce results
+    def compare_stats(player1, player2,):
+        if (player1 > player2):
+            return ("Player 1 - you win, congratulations!")
+        elif (player1 < player2):
+            return ("Player 2 Wins - you lose! Better luck next time!")
+        else:
+            return ("It's a draw! Fancy a rematch?")
+    compare_pokemon_top_trump_cards()
+    #Player input to decide if game is going to end or continue by looping back to start
+    play_again = input(" Do you want to play again? Yes/No ").lower()
+    time.sleep (6)
+    if play_again == "yes":
+        Pokemon_TopTrumps()
+    else:
+        print('Thanks for playing! Great game - come back soon!\n')
+Pokemon_TopTrumps()
